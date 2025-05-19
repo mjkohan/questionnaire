@@ -1,6 +1,9 @@
-import {Box} from '@mui/material'
+import { Box } from '@mui/material'
 
-export default function CustomProgressBar({progress}: {progress:number}) {
+export default function CustomProgressBar({ progress }: { progress: number }) {
+    const borderHue = 120 - ((100 - progress) * 1.2)
+    const fillColor = `hsl(${borderHue}, 70%, 50%)`
+
     return (
         <Box
             sx={{
@@ -16,8 +19,8 @@ export default function CustomProgressBar({progress}: {progress:number}) {
                 sx={{
                     width: `${progress}%`,
                     height: '100%',
-                    backgroundColor: 'primary.main',
-                    transition: 'width 0.3s ease',
+                    backgroundColor: fillColor,
+                    transition: 'width 0.3s ease, background-color 0.3s ease',
                 }}
             />
         </Box>

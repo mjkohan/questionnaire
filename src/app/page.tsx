@@ -30,58 +30,119 @@ export default function QuestionnairePage() {
     const currentQuestion = visibleQuestions[currentStep]
     const total = visibleQuestions.length
     const progress = ((currentStep + 1) / total) * 100
-    const isAnswered = answers[currentQuestion?.id] !== undefined && answers[currentQuestion?.id] !== ''
+
+    const isAnswered =
+        answers[currentQuestion?.id] !== undefined &&
+        answers[currentQuestion?.id] !== ''
+
+    const borderHue = 120 - ((100 - progress) * 1.2)
 
     return (
-        <Container maxWidth="sm" sx={{ py: 6 }}>
-            <Box textAlign="center" mb={4}>
-                <Typography variant={isMobile ? 'h6' : 'h4'} fontWeight="bold">
-                    پرسشنامه مرحله‌ای
-                </Typography>
-            </Box>
-
-            <CustomProgressBar progress={progress} />
-
-            {currentQuestion && (
-                <Paper
-                    key={currentQuestion.id}
-                    elevation={3}
-                    sx={{
-                        p: { xs: 2, sm: 4 },
-                        borderRadius: 3,
-                        mb: 4,
-                        backgroundColor: 'background.paper',
-                    }}
-                >
-                    <QuestionRenderer question={currentQuestion} />
-                </Paper>
-            )}
-
-            <Stack
-                direction={isMobile ? 'column-reverse' : 'row'}
-                spacing={isMobile ? 2 : 0}
-                justifyContent="space-between"
-                flexWrap="wrap"
+        <Box
+            sx={{
+                minHeight: '100vh',
+                bgcolor: '#f5f7fa',
+                // فقط در دسکتاپ وسط چین کن، موبایل حالت نرمال داشته باشه
+                display: isMobile ? 'block' : 'flex',
+                alignItems: isMobile ? 'initial' : 'center',
+                justifyContent: isMobile ? 'initial' : 'center',
+                px: 2,
+                py: isMobile ? 6 : 0
+            }}
+        >
+            <Container
+                maxWidth="sm"
+                sx={{
+                    position: 'relative',
+                    borderRadius: 3,
+                    bgcolor: '#fff',
+                    px: 3,
+                    py: isMobile ? 6 : 4,
+                    boxShadow: '0 8px 24px rgba(0,0,0,0.1)',
+                    border: 'none',
+                    // فقط در دسکتاپ حاشیه متحرک باشه
+                    ...(isMobile
+                        ? {}
+                        : {
+                            '&::before': {
+                                content: '""',
+                                position: 'absolute',
+                                top: -4,
+                                left: -4,
+                                right: -4,
+                                bottom: -4,
+                                borderRadius: 6,
+                                padding: '2px',
+                                background: `conic-gradient(
+                                      from 0deg,
+                                      hsl(${borderHue}, 70%, 50%) ${progress * 3.6}deg,
+                                      #ddd ${progress * 3.6}deg 360deg
+                                  )`,
+                                WebkitMask:
+                                    'linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)',
+                                WebkitMaskComposite: 'xor',
+                                maskComposite: 'exclude',
+                                zIndex: 1,
+                            },
+                        }),
+                }}
             >
-                <Button
-                    variant="outlined"
-                    disabled={currentStep === 0}
-                    onClick={prev}
-                    fullWidth={isMobile}
-                >
-                    قبلی
-                </Button>
-                <Button
-                    variant="contained"
-                    disabled={currentStep >= total - 1 || !isAnswered}
+                <Box textAlign="center" mb={4} sx={{ position: 'relative', zIndex: 2 }}>
+                    <Typography variant={isMobile ? 'h6' : 'h4'} fontWeight="bold">
+                        پرسشنامه مرحله‌ای
+                    </Typography>
+                </Box>
 
-                    onClick={next}
-                    fullWidth={isMobile}
-                >
-                    بعدی
-                </Button>
-            </Stack>
+                <CustomProgressBar progress={progress} />
 
-        </Container>
+                {currentQuestion && (
+                    <Paper
+                        key={currentQuestion.id}
+                        elevation={3}
+                        sx={{
+                            border:'none',
+                            boxShadow:'none',
+                            p: { xs: 2, sm: 4 },
+                            borderRadius: 3,
+                            mb: 4,
+                            bgcolor: 'background.paper',
+                            position: 'relative',
+                            zIndex: 2,
+                            height: 400, // ارتفاع ثابت باکس سوالات
+                            overflowY: 'auto', // اسکرول در صورت زیاد بودن محتوا
+                        }}
+                    >
+                        <QuestionRenderer question={currentQuestion} />
+                    </Paper>
+                )}
+
+                <Stack
+                    direction={isMobile ? 'column-reverse' : 'row'}
+                    spacing={isMobile ? 2 : 0}
+                    justifyContent="space-between"
+                    flexWrap="wrap"
+                    sx={{ position: 'relative', zIndex: 2 }}
+                >
+                    <Button
+                        variant="outlined"
+                        disabled={currentStep === 0}
+                        onClick={prev}
+                        fullWidth={isMobile}
+                    >
+                        قبلی
+                    </Button>
+                    <Button
+                        variant="contained"
+                        disabled={currentStep >= total - 1 || !isAnswered}
+                        onClick={next}
+                        fullWidth={isMobile}
+                    >
+                        بعدی
+                    </Button>
+                </Stack>
+            </Container>
+
+
+        </Box>
     )
 }
