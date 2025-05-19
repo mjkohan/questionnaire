@@ -1,4 +1,5 @@
-import { Button, Stack, useMediaQuery, useTheme } from '@mui/material'
+import {Button, Stack, Box, useMediaQuery, useTheme} from '@mui/material'
+import {useRouter} from "next/navigation";
 
 export default function NavigationButtons({
                                               isWelcome,
@@ -6,7 +7,7 @@ export default function NavigationButtons({
                                               currentStep,
                                               isAnswered,
                                               prev,
-                                              next
+                                              next,
                                           }: {
     isWelcome: boolean
     isGoodbye: boolean
@@ -17,6 +18,8 @@ export default function NavigationButtons({
 }) {
     const theme = useTheme()
     const isMobile = useMediaQuery(theme.breakpoints.down('sm'))
+    const router = useRouter()
+    const showPrevButton = !isWelcome && currentStep > 0 && !isGoodbye
 
     return (
         <Stack
@@ -24,26 +27,33 @@ export default function NavigationButtons({
             spacing={isMobile ? 2 : 0}
             justifyContent="space-between"
             flexWrap="wrap"
-            sx={{ position: 'relative', zIndex: 2 }}
+            sx={{position: 'relative', zIndex: 2}}
         >
-            <Button
-                variant="outlined"
-                disabled={isWelcome || currentStep === 0}
-                onClick={prev}
-                fullWidth={isMobile}
-            >
-                قبلی
-            </Button>
+            {showPrevButton ? (
+                <Button
+                    variant="outlined"
+                    onClick={prev}
+                    fullWidth={isMobile}
+                >
+                    قبلی
+                </Button>
+            ) : (
+                <Box sx={{visibility: 'hidden', width: isMobile ? '100%' : 'auto'}}>
+                    <Button variant="outlined" fullWidth={isMobile}>
+                        قبلی
+                    </Button>
+                </Box>
+            )}
+
             <Button
                 variant="contained"
-                onClick={next}
-                disabled={
-                    (!isWelcome && !isGoodbye && !isAnswered) || isGoodbye
-                }
+                onClick={isGoodbye ? () => window.location.reload() : next}
+                disabled={isWelcome ? false : (!isAnswered && !isGoodbye)}
                 fullWidth={isMobile}
             >
                 {isGoodbye ? 'پایان' : 'بعدی'}
             </Button>
+
         </Stack>
     )
 }
