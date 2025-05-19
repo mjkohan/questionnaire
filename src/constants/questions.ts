@@ -45,12 +45,7 @@ export const questions: Question[] = [
         type: 'choice',
         title: 'آیا علاقه‌مند به دریافت پیشنهادات خرید بر اساس سلیقه‌تان هستید؟',
         options: ['بله', 'خیر']
-    },
-    {
-        id: 9,
-        type: 'text',
-        title: 'لطفاً ایمیل خود را وارد کنید تا پیشنهادات برای شما ارسال شود:'
-    },
+    }
 ]
 
 export const conditions: Condition[] = [
