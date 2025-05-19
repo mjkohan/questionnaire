@@ -10,7 +10,7 @@ interface State {
     reset: () => void
 }
 
-export const useQuestionnaireStore = create<State>((set, get) => ({
+export const useQuestionnaireStore = create<State>((set) => ({
     currentStep: -1,
     answers: {},
     setAnswer: (id, value) => set((state) => ({
