@@ -11,7 +11,7 @@ interface State {
 }
 
 export const useQuestionnaireStore = create<State>((set, get) => ({
-    currentStep: 0,
+    currentStep: -1,
     answers: {},
     setAnswer: (id, value) => set((state) => ({
         answers: { ...state.answers, [id]: value },

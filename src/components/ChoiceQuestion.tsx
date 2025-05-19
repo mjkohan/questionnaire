@@ -6,7 +6,7 @@ export default function ChoiceQuestion({ question }: { question: CQ }) {
     const { answers, setAnswer } = useQuestionnaireStore()
     return (
         <FormControl component="fieldset" sx={{ mb: 2 }}>
-            <FormLabel component="legend">{question.title}</FormLabel>
+            <FormLabel sx={{ mb: 2 }} component="legend">{question.title}</FormLabel>
             <RadioGroup
                 value={answers[question.id] || ''}
                 onChange={(e) => setAnswer(question.id, e.target.value)}

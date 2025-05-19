@@ -16,6 +16,8 @@ import { useQuestionnaireStore } from '@/store/questionnaire'
 import { shouldDisplay } from '@/utils/conditionEvaluator'
 import { useMemo } from 'react'
 import CustomProgressBar from '@/components/CustomProgressBar'
+import WelcomePage from '@/components/WelcomePage'
+import GoodbyePage from '@/components/GoodbyePage'
 
 export default function QuestionnairePage() {
     const { currentStep, answers, next, prev } = useQuestionnaireStore()
@@ -27,14 +29,12 @@ export default function QuestionnairePage() {
         [answers]
     )
 
-    const currentQuestion = visibleQuestions[currentStep]
     const total = visibleQuestions.length
-    const progress = ((currentStep + 1) / total) * 100
-
-    const isAnswered =
-        answers[currentQuestion?.id] !== undefined &&
-        answers[currentQuestion?.id] !== ''
-
+    const isWelcome = currentStep === -1
+    const isGoodbye = currentStep === total
+    const currentQuestion = visibleQuestions[currentStep]
+    const progress = isWelcome ? 0 : isGoodbye ? 100 : ((currentStep + 1) / (total+1)) * 100
+    const isAnswered = answers[currentQuestion?.id] !== undefined && answers[currentQuestion?.id] !== ''
     const borderHue = 120 - ((100 - progress) * 1.2)
 
     return (
@@ -42,7 +42,6 @@ export default function QuestionnairePage() {
             sx={{
                 minHeight: '100vh',
                 bgcolor: '#f5f7fa',
-                // فقط در دسکتاپ وسط چین کن، موبایل حالت نرمال داشته باشه
                 display: isMobile ? 'block' : 'flex',
                 alignItems: isMobile ? 'initial' : 'center',
                 justifyContent: isMobile ? 'initial' : 'center',
@@ -59,8 +58,6 @@ export default function QuestionnairePage() {
                     px: 3,
                     py: isMobile ? 6 : 4,
                     boxShadow: '0 8px 24px rgba(0,0,0,0.1)',
-                    border: 'none',
-                    // فقط در دسکتاپ حاشیه متحرک باشه
                     ...(isMobile
                         ? {}
                         : {
@@ -93,28 +90,32 @@ export default function QuestionnairePage() {
                     </Typography>
                 </Box>
 
+                {/* ProgressBar always shown */}
                 <CustomProgressBar progress={progress} />
 
-                {currentQuestion && (
-                    <Paper
-                        key={currentQuestion.id}
-                        elevation={3}
-                        sx={{
-                            border:'none',
-                            boxShadow:'none',
-                            p: { xs: 2, sm: 4 },
-                            borderRadius: 3,
-                            mb: 4,
-                            bgcolor: 'background.paper',
-                            position: 'relative',
-                            zIndex: 2,
-                            height: 400, // ارتفاع ثابت باکس سوالات
-                            overflowY: 'auto', // اسکرول در صورت زیاد بودن محتوا
-                        }}
-                    >
+                <Paper
+                    elevation={3}
+                    sx={{
+                        border: 'none',
+                        boxShadow: 'none',
+                        p: { xs: 2, sm: 4 },
+                        borderRadius: 3,
+                        mb: 4,
+                        bgcolor: 'background.paper',
+                        position: 'relative',
+                        zIndex: 2,
+                        height: 400,
+                        overflowY: 'auto',
+                    }}
+                >
+                    {isWelcome ? (
+                        <WelcomePage />
+                    ) : isGoodbye ? (
+                        <GoodbyePage />
+                    ) : currentQuestion ? (
                         <QuestionRenderer question={currentQuestion} />
-                    </Paper>
-                )}
+                    ) : null}
+                </Paper>
 
                 <Stack
                     direction={isMobile ? 'column-reverse' : 'row'}
@@ -125,7 +126,7 @@ export default function QuestionnairePage() {
                 >
                     <Button
                         variant="outlined"
-                        disabled={currentStep === 0}
+                        disabled={isWelcome || currentStep === 0}
                         onClick={prev}
                         fullWidth={isMobile}
                     >
@@ -133,16 +134,17 @@ export default function QuestionnairePage() {
                     </Button>
                     <Button
                         variant="contained"
-                        disabled={currentStep >= total - 1 || !isAnswered}
                         onClick={next}
+                        disabled={
+                            (!isWelcome && !isGoodbye && !isAnswered) ||
+                            (isGoodbye)
+                        }
                         fullWidth={isMobile}
                     >
-                        بعدی
+                        {isGoodbye ? 'پایان' : 'بعدی'}
                     </Button>
                 </Stack>
             </Container>
-
-
         </Box>
     )
 }
