@@ -36,6 +36,7 @@ export default function QuestionnairePage() {
                 <Header />
                 <CustomProgressBar progress={progress} />
                 <QuestionDisplay
+                    isMobile={isMobile}
                     isWelcome={isWelcome}
                     isGoodbye={isGoodbye}
                     currentQuestion={currentQuestion}

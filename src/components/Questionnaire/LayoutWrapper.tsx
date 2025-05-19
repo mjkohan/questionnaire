@@ -6,7 +6,7 @@ export default function LayoutWrapper({ children }: { children: ReactNode }) {
     const isMobile = useMediaQuery(theme.breakpoints.down('sm'))
 
     return (
-        <Box className="glass-bg"
+        <Box
             sx={{
                 minHeight: '100vh',
                 bgcolor: '#f5f7fa',
