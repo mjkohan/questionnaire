@@ -14,7 +14,7 @@ export default function LayoutWrapper({ children }: { children: ReactNode }) {
                 alignItems: isMobile ? 'initial' : 'center',
                 justifyContent: isMobile ? 'initial' : 'center',
                 px: 2,
-                py: isMobile ? 6 : 0
+                py: isMobile ? 2 : 0
             }}
         >
             {children}
