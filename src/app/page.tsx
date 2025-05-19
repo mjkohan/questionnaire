@@ -1,14 +1,26 @@
 'use client'
 
-import { Box, Typography, Paper, Button, LinearProgress, Stack } from '@mui/material'
+import {
+    Box,
+    Typography,
+    Paper,
+    Button,
+    Stack,
+    Container,
+    useMediaQuery,
+    useTheme
+} from '@mui/material'
 import { questions, conditions } from '@/constants/questions'
 import QuestionRenderer from '@/components/QuestionRenderer'
 import { useQuestionnaireStore } from '@/store/questionnaire'
 import { shouldDisplay } from '@/utils/conditionEvaluator'
 import { useMemo } from 'react'
-import CustomProgressBar from "@/components/CustomProgressBar";
+import CustomProgressBar from '@/components/CustomProgressBar'
+
 export default function QuestionnairePage() {
     const { currentStep, answers, next, prev } = useQuestionnaireStore()
+    const theme = useTheme()
+    const isMobile = useMediaQuery(theme.breakpoints.down('sm'))
 
     const visibleQuestions = useMemo(
         () => questions.filter((q) => shouldDisplay(q.id, conditions, answers)),
@@ -18,32 +30,58 @@ export default function QuestionnairePage() {
     const currentQuestion = visibleQuestions[currentStep]
     const total = visibleQuestions.length
     const progress = ((currentStep + 1) / total) * 100
+    const isAnswered = answers[currentQuestion?.id] !== undefined && answers[currentQuestion?.id] !== ''
 
     return (
-        <Box maxWidth="600px" mx="auto" mt={4}>
-            <Typography variant="h5" gutterBottom>
-                پرسشنامه مرحله‌ای
-            </Typography>
+        <Container maxWidth="sm" sx={{ py: 6 }}>
+            <Box textAlign="center" mb={4}>
+                <Typography variant={isMobile ? 'h6' : 'h4'} fontWeight="bold">
+                    پرسشنامه مرحله‌ای
+                </Typography>
+            </Box>
 
             <CustomProgressBar progress={progress} />
+
             {currentQuestion && (
-                <Paper key={currentQuestion.id} sx={{ p: 2, mb: 3 }}>
+                <Paper
+                    key={currentQuestion.id}
+                    elevation={3}
+                    sx={{
+                        p: { xs: 2, sm: 4 },
+                        borderRadius: 3,
+                        mb: 4,
+                        backgroundColor: 'background.paper',
+                    }}
+                >
                     <QuestionRenderer question={currentQuestion} />
                 </Paper>
             )}
 
-            <Stack direction="row" spacing={2} justifyContent="space-between">
-                <Button variant="outlined" disabled={currentStep === 0} onClick={prev}>
+            <Stack
+                direction={isMobile ? 'column-reverse' : 'row'}
+                spacing={isMobile ? 2 : 0}
+                justifyContent="space-between"
+                flexWrap="wrap"
+            >
+                <Button
+                    variant="outlined"
+                    disabled={currentStep === 0}
+                    onClick={prev}
+                    fullWidth={isMobile}
+                >
                     قبلی
                 </Button>
                 <Button
                     variant="contained"
-                    disabled={currentStep >= total - 1}
+                    disabled={currentStep >= total - 1 || !isAnswered}
+
                     onClick={next}
+                    fullWidth={isMobile}
                 >
                     بعدی
                 </Button>
             </Stack>
-        </Box>
+
+        </Container>
     )
 }
