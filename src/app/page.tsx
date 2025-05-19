@@ -90,7 +90,6 @@ export default function QuestionnairePage() {
                     </Typography>
                 </Box>
 
-                {/* ProgressBar always shown */}
                 <CustomProgressBar progress={progress} />
 
                 <Paper
