@@ -1,7 +1,7 @@
 import { Paper } from '@mui/material'
-import QuestionRenderer from '@/components/QuestionRenderer'
-import WelcomePage from '@/components/WelcomePage'
-import GoodbyePage from '@/components/GoodbyePage'
+import QuestionRenderer from '@/components/Question/QuestionRenderer'
+import WelcomePage from '@/components/ui-pages/WelcomePage'
+import GoodbyePage from '@/components/ui-pages/GoodbyePage'
 import { Question } from '@/types/questionnaire'
 
 export default function QuestionDisplay({

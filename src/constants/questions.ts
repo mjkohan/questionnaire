@@ -56,9 +56,5 @@ export const conditions: Condition[] = [
     {
         questionId: 7,
         rule: (answers) => answers[6] === 'خیر'
-    },
-    {
-        questionId: 9,
-        rule: (answers) => answers[8] === 'بله'
     }
 ]
