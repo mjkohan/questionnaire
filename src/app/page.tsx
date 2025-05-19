@@ -4,6 +4,7 @@ import {Box} from "@mui/system";
 import {Paper, Typography} from "@mui/material";
 import {conditions, questions} from "@/constants/questions";
 import {shouldDisplay} from "@/utils/conditionEvaluator";
+import QuestionRenderer from "@/components/QuestionRenderer";
 
 export default function Home() {
     const { answers } = useQuestionnaireStore()
@@ -19,7 +20,7 @@ export default function Home() {
               {questions.map((question) =>
                   shouldDisplay(question.id, conditions, answers) ? (
                       <Paper key={question.id} sx={{ p: 2, mb: 3 }}>
-                          {question.title}
+                          <QuestionRenderer question={question} />
                       </Paper>
                   ) : null
               )}
