@@ -1,5 +1,4 @@
 import {Button, Stack, Box, useMediaQuery, useTheme} from '@mui/material'
-import {useRouter} from "next/navigation";
 
 export default function NavigationButtons({
                                               isWelcome,
@@ -18,7 +17,6 @@ export default function NavigationButtons({
 }) {
     const theme = useTheme()
     const isMobile = useMediaQuery(theme.breakpoints.down('sm'))
-    const router = useRouter()
     const showPrevButton = !isWelcome && currentStep > 0 && !isGoodbye
 
     return (
